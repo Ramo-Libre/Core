@@ -26,6 +26,8 @@ jobs:
       - name: 📦 Publish DSL Parser
         run: |
           cd packages/dsl-parser
+          echo "@ramolibre-core:registry=https://npm.pkg.github.com" > .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${BUN_AUTH_TOKEN}" >> .npmrc
           bun publish
         env:
           BUN_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -33,6 +35,8 @@ jobs:
       - name: 🎨 Publish UI Themes
         run: |
           cd packages/ui-themes
+          echo "@ramolibre-core:registry=https://npm.pkg.github.com" > .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${BUN_AUTH_TOKEN}" >> .npmrc
           bun publish
         env:
           BUN_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
