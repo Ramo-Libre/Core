@@ -1,0 +1,39 @@
+name: Publish Packages to GitHub
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 🍞 Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: 🧶 Install Dependencies
+        run: bun install --frozen-lockfile
+
+      - name: 🔍 Run Tests
+        run: bun test
+
+      - name: 📦 Publish DSL Parser
+        run: |
+          cd packages/dsl-parser
+          bun publish
+        env:
+          BUN_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🎨 Publish UI Themes
+        run: |
+          cd packages/ui-themes
+          bun publish
+        env:
+          BUN_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
