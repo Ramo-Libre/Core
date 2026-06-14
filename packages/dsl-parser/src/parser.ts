@@ -97,26 +97,21 @@ const EOF_TOKEN: Token = { type: 'eof', value: '' };
 
 function tokenize(input: string): Token[] {
   const tokens: Token[] = [];
-  const tokenRegex = /(\d+(?:\.\d+)?)|(\*\*|>=|<=|==|>|<|[+\-*/])|([a-zA-Z_]\w*)|(,)|(\()|(\))|(:)|(\s+)/y;
+  const normalized = input.replace(/\s+/g, ' ').trim();
 
-  let lastIndex = 0;
-  while (lastIndex < input.length) {
-    tokenRegex.lastIndex = lastIndex;
-    const match = tokenRegex.exec(input);
-    if (!match) {
-      lastIndex++;
-      continue;
-    }
-    const [, num, op, id, comma, lparen, rparen, colon /* whitespace ignorado */] = match;
-    if (num !== undefined)    tokens.push({ type: 'number', value: num });
-    else if (op !== undefined)    tokens.push({ type: 'op', value: op });
-    else if (id !== undefined)    tokens.push({ type: 'id', value: id });
-    else if (comma !== undefined) tokens.push({ type: 'comma', value: ',' });
+  const tokenRegex =
+    /(\d+(?:\.\d+)?)|(\*\*|>=|<=|==|>|<|[+\-*/])|([A-Za-z_]\w*)|(,)|(\()|(\))|(:)/g;
+
+  let match: RegExpExecArray | null;
+  while ((match = tokenRegex.exec(normalized)) !== null) {
+    const [, num, op, id, comma, lparen, rparen, colon] = match;
+    if (num !== undefined)     tokens.push({ type: 'number', value: num });
+    else if (op !== undefined)     tokens.push({ type: 'op', value: op });
+    else if (id !== undefined)     tokens.push({ type: 'id', value: id });
+    else if (comma !== undefined)  tokens.push({ type: 'comma', value: ',' });
     else if (lparen !== undefined) tokens.push({ type: 'lparen', value: '(' });
     else if (rparen !== undefined) tokens.push({ type: 'rparen', value: ')' });
-    else if (colon !== undefined) tokens.push({ type: 'colon', value: ':' });
-    // el grupo \s+ no genera token, simplemente se avanza
-    lastIndex = tokenRegex.lastIndex;
+    else if (colon !== undefined)  tokens.push({ type: 'colon', value: ':' });
   }
   tokens.push(EOF_TOKEN);
   return tokens;
@@ -295,8 +290,8 @@ function parseLine(line: string): StatementNode | null {
 		return parseDomainInStatement(rest, label);
 	}
 
-	const assignMatch = rest.match(/^([A-Za-z_]\w*)\s*(?<!=)=(?!=)\s*(.+)$/);
-	if (assignMatch) {
+    const assignMatch = rest.match(/^([A-Za-z_]\w*)\s*=\s*(\S[\s\S]*)$/);
+    if (assignMatch) {
 		const lhs = assignMatch[1]!.trim();
 		const rhs = assignMatch[2]!.trim();
 		const isAssignment = !splitOnRelational(rhs);
@@ -328,35 +323,21 @@ function parseLine(line: string): StatementNode | null {
 }
 
 function parseDomainStatement(line: string, label?: string): DomainStatement {
-    const match = line.match(
-      /^dominio\s+([A-Za-z_][\w,\s]*?)\s*\[\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*\]$/i
-    );
-    if (!match) throw new Error(`Sintaxis de dominio inválida: ${line}`);
-	const variables = match[1]!.split(',').map((v) => v.trim());
-	return {
-		type: 'domain',
-		variables,
-		min: parseFloat(match[2]!),
-		max: parseFloat(match[3]!),
-		raw: line,
-		label
-	};
+  const match = line.match(
+    /^dominio\s+([A-Za-z_][\w,\s]*[A-Za-z_\w]|[A-Za-z_]\w*)\s*\[\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*\]$/i
+  );
+  if (!match) throw new Error(`Sintaxis de dominio inválida: ${line}`);
+  const variables = match[1]!.split(',').map((v) => v.trim());
+  return { type: 'domain', variables, min: parseFloat(match[2]!), max: parseFloat(match[3]!), raw: line, label };
 }
 
 function parseDomainInStatement(line: string, label?: string): DomainStatement {
-    const match = line.match(
-      /^([A-Za-z_][\w,\s]*?)\s+in\s*\[\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*\]$/i
-    );
-    if (!match) throw new Error(`Sintaxis 'in' de dominio inválida: ${line}`);
-	const variables = match[1]!.split(',').map((v) => v.trim());
-	return {
-		type: 'domain',
-		variables,
-		min: parseFloat(match[2]!),
-		max: parseFloat(match[3]!),
-		raw: line,
-		label
-	};
+  const match = line.match(
+    /^([A-Za-z_][\w,\s]*[A-Za-z_\w]|[A-Za-z_]\w*)\s+in\s*\[\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*\]$/i
+  );
+  if (!match) throw new Error(`Sintaxis 'in' de dominio inválida: ${line}`);
+  const variables = match[1]!.split(',').map((v) => v.trim());
+  return { type: 'domain', variables, min: parseFloat(match[2]!), max: parseFloat(match[3]!), raw: line, label };
 }
 
 // ============================================================
