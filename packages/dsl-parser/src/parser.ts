@@ -96,30 +96,30 @@ interface Token {
 const EOF_TOKEN: Token = { type: 'eof', value: '' };
 
 function tokenize(input: string): Token[] {
-	const tokens: Token[] = [];
-	const tokenRegex =
-		/\s*(?:(\d+(?:\.\d+)?)|(\*\*|>=|<=|==|>|<|[+\-*/])|([a-zA-Z_]\w*)|(,)|(\()|(\))|(:))\s*/y;
+  const tokens: Token[] = [];
+  const tokenRegex = /(\d+(?:\.\d+)?)|(\*\*|>=|<=|==|>|<|[+\-*/])|([a-zA-Z_]\w*)|(,)|(\()|(\))|(:)|(\s+)/y;
 
-	let lastIndex = 0;
-	while (lastIndex < input.length) {
-		tokenRegex.lastIndex = lastIndex;
-		const match = tokenRegex.exec(input);
-		if (!match) {
-			lastIndex++;
-			continue;
-		}
-		const [, num, op, id, comma, lparen, rparen, colon] = match;
-		if (num !== undefined) tokens.push({ type: 'number', value: num });
-		else if (op !== undefined) tokens.push({ type: 'op', value: op });
-		else if (id !== undefined) tokens.push({ type: 'id', value: id });
-		else if (comma !== undefined) tokens.push({ type: 'comma', value: ',' });
-		else if (lparen !== undefined) tokens.push({ type: 'lparen', value: '(' });
-		else if (rparen !== undefined) tokens.push({ type: 'rparen', value: ')' });
-		else if (colon !== undefined) tokens.push({ type: 'colon', value: ':' });
-		lastIndex = tokenRegex.lastIndex;
-	}
-	tokens.push(EOF_TOKEN);
-	return tokens;
+  let lastIndex = 0;
+  while (lastIndex < input.length) {
+    tokenRegex.lastIndex = lastIndex;
+    const match = tokenRegex.exec(input);
+    if (!match) {
+      lastIndex++;
+      continue;
+    }
+    const [, num, op, id, comma, lparen, rparen, colon /* whitespace ignorado */] = match;
+    if (num !== undefined)    tokens.push({ type: 'number', value: num });
+    else if (op !== undefined)    tokens.push({ type: 'op', value: op });
+    else if (id !== undefined)    tokens.push({ type: 'id', value: id });
+    else if (comma !== undefined) tokens.push({ type: 'comma', value: ',' });
+    else if (lparen !== undefined) tokens.push({ type: 'lparen', value: '(' });
+    else if (rparen !== undefined) tokens.push({ type: 'rparen', value: ')' });
+    else if (colon !== undefined) tokens.push({ type: 'colon', value: ':' });
+    // el grupo \s+ no genera token, simplemente se avanza
+    lastIndex = tokenRegex.lastIndex;
+  }
+  tokens.push(EOF_TOKEN);
+  return tokens;
 }
 
 // ============================================================
@@ -237,8 +237,8 @@ const RELATIONAL_OPS = ['>=', '<=', '>', '<', '=='] as const;
 type RelationalOp = (typeof RELATIONAL_OPS)[number];
 
 function splitOnRelational(line: string): [string, RelationalOp, string] | null {
-	const match = line.match(/(.+?)(>=|<=|(?<!\*External)==(?!\*)|>|<)(.+)/);
-	if (match) {
+    const match = line.match(/^([^<>=]+?)\s*(>=|<=|==|>|<)\s*([^<>=].*)$/);
+    if (match) {
 		const left = match[1];
 		const right = match[3];
 		if (!left || !right) return null;
@@ -328,10 +328,10 @@ function parseLine(line: string): StatementNode | null {
 }
 
 function parseDomainStatement(line: string, label?: string): DomainStatement {
-	const match = line.match(
-		/^dominio\s+(.+?)\s*\[\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*\]$/i
-	);
-	if (!match) throw new Error(`Sintaxis de dominio inválida: ${line}`);
+    const match = line.match(
+      /^dominio\s+([A-Za-z_][\w,\s]*?)\s*\[\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*\]$/i
+    );
+    if (!match) throw new Error(`Sintaxis de dominio inválida: ${line}`);
 	const variables = match[1]!.split(',').map((v) => v.trim());
 	return {
 		type: 'domain',
@@ -344,8 +344,10 @@ function parseDomainStatement(line: string, label?: string): DomainStatement {
 }
 
 function parseDomainInStatement(line: string, label?: string): DomainStatement {
-	const match = line.match(/^(.+?)\s+in\s*\[\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*\]$/i);
-	if (!match) throw new Error(`Sintaxis 'in' de dominio inválida: ${line}`);
+    const match = line.match(
+      /^([A-Za-z_][\w,\s]*?)\s+in\s*\[\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*\]$/i
+    );
+    if (!match) throw new Error(`Sintaxis 'in' de dominio inválida: ${line}`);
 	const variables = match[1]!.split(',').map((v) => v.trim());
 	return {
 		type: 'domain',
@@ -620,17 +622,21 @@ export function extractDomains(
 // ============================================================
 
 function escapeLatexText(text: string): string {
-	return text
-		.replace(/\\/g, '\\textbackslash{}')
-		.replace(/\{/g, '\\{')
-		.replace(/\}/g, '\\}')
-		.replace(/\^/g, '\\^{}')
-		.replace(/_/g, '\\_')
-		.replace(/&/g, '\\&')
-		.replace(/%/g, '\\%')
-		.replace(/\$/g, '\\$')
-		.replace(/#/g, '\\#')
-		.replace(/~/g, '\\textasciitilde{}');
+  return text.replace(/[\\{}^_&%$#~]/g, (char) => {
+    const map: Record<string, string> = {
+      '\\': '\\textbackslash{}',
+      '{': '\\{',
+      '}': '\\}',
+      '^': '\\^{}',
+      '_': '\\_',
+      '&': '\\&',
+      '%': '\\%',
+      '$': '\\$',
+      '#': '\\#',
+      '~': '\\textasciitilde{}',
+    };
+    return map[char] ?? char;
+  });
 }
 
 export function toLatex(node: ASTNode | StatementNode): string {
