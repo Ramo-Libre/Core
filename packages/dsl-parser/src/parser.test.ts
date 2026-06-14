@@ -438,7 +438,7 @@ describe('toLatex — statements', () => {
 
 	it('constraint == → =', () => {
 		const stmts = parseScript('X == 70');
-		expect(toLatex(stmts[0]!)).toBe('\\text{X} = 70');
+		expect(toLatex(stmts[0]!)).toBe('X = 70');
 	});
 
 	it('domain statement → \\in', () => {

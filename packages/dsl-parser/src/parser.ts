@@ -232,14 +232,19 @@ const RELATIONAL_OPS = ['>=', '<=', '>', '<', '=='] as const;
 type RelationalOp = (typeof RELATIONAL_OPS)[number];
 
 function splitOnRelational(line: string): [string, RelationalOp, string] | null {
-    const match = line.match(/^([^<>=]+?\S)\s*(>=|<=|==|>|<)\s*(\S.*)$/);
-    if (match) {
-		const left = match[1];
-		const right = match[3];
-		if (!left || !right) return null;
-		return [left.trim(), match[2] as RelationalOp, right.trim()];
-	}
-	return null;
+    const match = line.match(/>=|<=|==|>|</);
+    if (!match || match.index === undefined) return null;
+
+    const op = match[0] as RelationalOp;
+
+    const left = line.slice(0, match.index).trim();
+    const right = line.slice(match.index + op.length).trim();
+
+    if (!left || !right) return null;
+
+    if (/[<>=]/.test(left) || /[<>=]/.test(right)) return null;
+
+    return [left, op, right];
 }
 
 function extractLabel(line: string): [string | undefined, string] {
@@ -290,7 +295,7 @@ function parseLine(line: string): StatementNode | null {
 		return parseDomainInStatement(rest, label);
 	}
 
-    const assignMatch = rest.match(/^([A-Za-z_]\w*)\s*=\s*(\S[\s\S]*)$/);
+    const assignMatch = rest.match(/^([A-Za-z_]\w*)\s*=(?!=)\s*(\S[\s\S]*)$/);
     if (assignMatch) {
 		const lhs = assignMatch[1]!.trim();
 		const rhs = assignMatch[2]!.trim();
@@ -324,20 +329,22 @@ function parseLine(line: string): StatementNode | null {
 
 function parseDomainStatement(line: string, label?: string): DomainStatement {
     const match = line.match(
-      /^dominio\s+([A-Za-z_]\w*(?:\s*,\s*\w+)*)\s*\[\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*\]$/i
+      /^dominio\s+([A-Za-z_]\w*(?:\s*,\s*[A-Za-z_]\w*)*)\s*\[\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*\]$/i
     );
     if (!match) throw new Error(`Sintaxis de dominio inválida: ${line}`);
-  const variables = match[1]!.split(',').map((v) => v.trim());
-  return { type: 'domain', variables, min: parseFloat(match[2]!), max: parseFloat(match[3]!), raw: line, label };
+
+    const variables = match[1]!.split(',').map((v) => v.trim());
+    return { type: 'domain', variables, min: parseFloat(match[2]!), max: parseFloat(match[3]!), raw: line, label };
 }
 
 function parseDomainInStatement(line: string, label?: string): DomainStatement {
     const match = line.match(
-      /^([A-Za-z_]\w*(?:\s*,\s*\w+)*)\s+in\s*\[\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*\]$/i
+      /^([A-Za-z_]\w*(?:\s*,\s*[A-Za-z_]\w*)*)\s+in\s*\[\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*\]$/i
     );
     if (!match) throw new Error(`Sintaxis 'in' de dominio inválida: ${line}`);
-  const variables = match[1]!.split(',').map((v) => v.trim());
-  return { type: 'domain', variables, min: parseFloat(match[2]!), max: parseFloat(match[3]!), raw: line, label };
+
+    const variables = match[1]!.split(',').map((v) => v.trim());
+    return { type: 'domain', variables, min: parseFloat(match[2]!), max: parseFloat(match[3]!), raw: line, label };
 }
 
 // ============================================================
