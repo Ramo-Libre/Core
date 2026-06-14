@@ -12,7 +12,7 @@
       },
     },
     "packages/dsl-parser": {
-      "name": "@ramolibre/dsl-parser",
+      "name": "@ramo-libre/dsl-parser",
       "version": "1.0.0",
       "dependencies": {
         "decimal.js": "^10.6.0",
@@ -25,7 +25,7 @@
       },
     },
     "packages/ui-themes": {
-      "name": "@ramolibre/ui-themes",
+      "name": "@ramo-libre/ui-themes",
       "version": "1.0.0",
       "dependencies": {
         "@lucide/svelte": "^1.17.0",
@@ -51,9 +51,9 @@
 
     "@lucide/svelte": ["@lucide/svelte@1.17.0", "", { "peerDependencies": { "svelte": "^5" } }, "sha512-q06YCFBN5CO8cd1ADmLCxWRVMVb7xxvHzqC0lvNoxGa+FLW6Cd1Y1AOxgbQk4Iwe68vkAMCRveNHint4WoaVKg=="],
 
-    "@ramolibre/dsl-parser": ["@ramolibre/dsl-parser@workspace:packages/dsl-parser"],
+    "@ramo-libre/dsl-parser": ["@ramo-libre/dsl-parser@workspace:packages/dsl-parser"],
 
-    "@ramolibre/ui-themes": ["@ramolibre/ui-themes@workspace:packages/ui-themes"],
+    "@ramo-libre/ui-themes": ["@ramo-libre/ui-themes@workspace:packages/ui-themes"],
 
     "@sveltejs/acorn-typescript": ["@sveltejs/acorn-typescript@1.0.10", "", { "peerDependencies": { "acorn": "^8.9.0" } }, "sha512-4WfKk68eTih+MiJD4fSbxN7E8kVBmTMPWHUPYjvl2N0rMs53YLTT8/YjKU5Dtnz5LqDjl7LEw4U7lXR2W3J5WA=="],
 

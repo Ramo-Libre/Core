@@ -1,5 +1,5 @@
 {
-  "name": "@ramolibre/core-monorepo",
+  "name": "@ramo-libre/core-monorepo",
   "version": "1.0.0",
   "type": "module",
   "private": true,
