@@ -35,11 +35,6 @@ jobs:
         with:
           languages: 'javascript-typescript'
 
-      - name: 🏗️ Type Check for Analyzer
-        run: |
-          cd packages/dsl-parser && bun run build
-          cd packages/ui-themes && bun run build
-
       - name: 🔍 Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
