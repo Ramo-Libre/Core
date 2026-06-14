@@ -1,5 +1,5 @@
 {
-    "name": "@ramolibre-core/dsl-parser",
+    "name": "@ramolibre/dsl-parser",
     "type": "module",
     "version": "1.0.0",
     "main": "./src/index.ts",

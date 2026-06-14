@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           registry-url: 'https://npm.pkg.github.com'
-          scope: '@ramolibre-core'
+          scope: '@ramolibre'
 
       - name: 🧶 Install Dependencies
         run: bun install --frozen-lockfile
@@ -38,7 +38,6 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Hacemos lo mismo para el UI Themes
       - name: 🎨 Publish UI Themes
         run: |
           cd packages/ui-themes
