@@ -51,6 +51,10 @@
 	--color-config-200: oklch(0.5544 0.0407 257.42 / 65.49%);
 	--color-config-300: oklch(0.5544 0.0407 257.42 / 32.75%);
 	--color-config-400: oklch(0.5544 0.0407 257.42 / 16.38%);
+	--color-todos-100: oklch(0.80 0.17 95);
+	--color-todos-200: oklch(0.80 0.17 95 / 65.49%);
+	--color-todos-300: oklch(0.80 0.17 95 / 32.75%);
+	--color-todos-400: oklch(0.80 0.17 95 / 16.38%);
 }
 
 .dark {
@@ -102,6 +106,10 @@
 	--color-config-200: oklch(0.5544 0.0407 257.42 / 65.49%);
 	--color-config-300: oklch(0.5544 0.0407 257.42 / 32.75%);
 	--color-config-400: oklch(0.5544 0.0407 257.42 / 16.38%);
+	--color-todos-100: oklch(0.80 0.17 95);
+	--color-todos-200: oklch(0.80 0.17 95 / 65.49%);
+	--color-todos-300: oklch(0.80 0.17 95 / 32.75%);
+	--color-todos-400: oklch(0.80 0.17 95 / 16.38%);
 }
 
 .nord {
@@ -149,6 +157,12 @@
 	--color-config-200: oklch(55% 0.06 240 / 65%);
 	--color-config-300: oklch(55% 0.06 240 / 33%);
 	--color-config-400: oklch(55% 0.06 240 / 15%);
+
+	/* Todos: Aurora Gold */
+	--color-todos-100: oklch(80% 0.13 78);
+	--color-todos-200: oklch(80% 0.13 78 / 65%);
+	--color-todos-300: oklch(80% 0.13 78 / 33%);
+	--color-todos-400: oklch(80% 0.13 78 / 15%);
 
 	/* Indicadores: Basados en la paleta Aurora */
 	--color-success-100: oklch(78% 0.12 150); /* Green */
@@ -202,6 +216,12 @@
 	--color-config-300: oklch(45% 0.03 250 / 33%);
 	--color-config-400: oklch(45% 0.03 250 / 15%);
 
+	/* Todos: Sky Foam (contraste frío frente al Golden Chai de Grades) */
+	--color-todos-100: oklch(70% 0.09 210);
+	--color-todos-200: oklch(70% 0.09 210 / 65%);
+	--color-todos-300: oklch(70% 0.09 210 / 33%);
+	--color-todos-400: oklch(70% 0.09 210 / 15%);
+
 	/* Indicadores: Ajustados para armonía visual con el fondo crema */
 	--color-success-100: oklch(62% 0.15 145); /* Matcha vibrante */
 	--color-warning-100: oklch(70% 0.16 75); /* Miel */
@@ -221,6 +241,7 @@
 	--color-calendar-100: oklch(65% 0.22 300); /* Violeta Laser */
 	--color-classes-100: oklch(75% 0.2 20); /* Sunset Orange */
 	--color-config-100: oklch(50% 0.1 280); /* Indigo Night */
+	--color-todos-100: oklch(85% 0.18 90); /* Neon Gold */
 }
 
 .forest {
@@ -236,6 +257,7 @@
 	--color-calendar-100: oklch(60% 0.12 35); /* Arcilla / Terracota */
 	--color-classes-100: oklch(55% 0.08 120); /* Musgo */
 	--color-config-100: oklch(45% 0.04 160); /* Eucalipto */
+	--color-todos-100: oklch(78% 0.13 60); /* Miel de Bosque */
 }
 
 .dracula {
@@ -251,6 +273,7 @@
 	--color-calendar-100: oklch(80% 0.15 350); /* Rosa */
 	--color-classes-100: oklch(82% 0.16 70); /* Naranja */
 	--color-config-100: oklch(65% 0.05 272); /* Gris Dracula */
+	--color-todos-100: oklch(85% 0.15 95); /* Dracula Gold */
 }
 
 .sakura {
@@ -266,6 +289,7 @@
 	--color-calendar-100: oklch(65% 0.15 15); /* Carmesí suave */
 	--color-classes-100: oklch(72% 0.1 50); /* Durazno */
 	--color-config-100: oklch(55% 0.03 350); /* Gris Rosado */
+	--color-todos-100: oklch(78% 0.11 85); /* Miel Sakura */
 }
 
 /*=========================================================================================================================*/
