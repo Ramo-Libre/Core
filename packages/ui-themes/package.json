@@ -1,7 +1,7 @@
 {
     "name": "@ramo-libre/ui-themes",
     "type": "module",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "main": "./src/index.ts",
     "types": "./src/index.ts",
     "scripts": {
