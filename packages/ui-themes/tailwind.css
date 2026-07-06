@@ -253,10 +253,10 @@
 	--color-base-400: oklch(32% 0.06 280); /* Bordes */
 	--color-content: oklch(95% 0.02 280); /* Blanco azulado */
 
-	--color-primary-100: oklch(70% 0.25 330); /* Neón Fuchsia */
-	--color-primary-200: oklch(70% 0.25 330 / 65.49%);
-	--color-primary-300: oklch(70% 0.25 330 / 32.75%);
-	--color-primary-400: oklch(70% 0.25 330 / 16.38%);
+	--color-primary-100: oklch(72% 0.2 250); /* Electric Blue */
+	--color-primary-200: oklch(72% 0.2 250 / 65.49%);
+	--color-primary-300: oklch(72% 0.2 250 / 32.75%);
+	--color-primary-400: oklch(72% 0.2 250 / 16.38%);
 	--color-schedule-100: oklch(75% 0.18 200); /* Eléctrico Cyan */
 	--color-schedule-200: oklch(75% 0.18 200 / 65.49%);
 	--color-schedule-300: oklch(75% 0.18 200 / 32.75%);
